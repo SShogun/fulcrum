@@ -1,0 +1,22 @@
+<!-- core/templates/base.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link href="{% static 'css/tailwind-output.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <!-- Header content -->
+    </header>
+    <main>
+      {% block content %}
+      <!-- Content will be inserted here -->
+      {% endblock %}
+    </main>
+    <footer>
+      <!-- Footer content -->
+    </footer>
+  </body>
+</html>
