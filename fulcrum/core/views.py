@@ -41,3 +41,43 @@ def Profile(request):
         student = Student.objects.get(student_id=student_id)
         return render(request, 'profile.html', {'student': student})
     return redirect('student-login')
+
+def TeacherProfile(request):
+    if teacher_id := request.session.get('teacher_id'):
+        teacher = Teacher.objects.get(teacher_id=teacher_id)
+        return render(request, 'teacherProfile.html', {'teacher': teacher})
+    return redirect('teacher-login')
+
+def TeacherReg(request):
+    if request.method == 'POST':
+        data = request.POST
+        teacher = Teacher.objects.create(
+            teacher_id=data.get('teacher_id'),
+            password=make_password(data.get('password'))  # Ensure password is hashed
+        )
+        messages.success(request, 'Registration successful!')
+        return redirect('teacher-login')
+    return render(request, 'teacherReg.html')
+
+def TeacherLogin(request):
+    if request.method == 'POST':
+        data = request.POST
+        teacher_id = data.get('teacher_id')
+        password = data.get('password')
+        
+        try:
+            teacher = Teacher.objects.get(teacher_id=teacher_id)
+            # Debug prints
+            print(f"Input password: {password}")
+            print(f"Stored hashed password: {teacher.password}")
+            print(f"Password check result: {check_password(password, teacher.password)}")
+            
+            if check_password(password, teacher.password):
+                request.session['teacher_id'] = teacher_id
+                return redirect('teacher-profile')
+            else:
+                messages.error(request, 'Invalid password!')
+        except Teacher.DoesNotExist:
+            messages.error(request, 'Teacher ID not found!')
+            
+    return render(request, 'teacherLogin.html')

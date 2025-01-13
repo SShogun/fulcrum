@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="h-screen bg-[#1a1a1a] py-4">
+  <div class="container mx-auto px-2">
+    <div class="max-w-md mx-auto bg-gray-800 rounded-lg shadow-lg p-4">
+      <h2 class="text-2xl font-bold text-white mb-4 text-center">
+        Teacher Registration
+      </h2>
+
+      <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="teacher_id" class="block text-gray-300 mb-1 text-sm">
+            Teacher ID
+          </label>
+          <input
+            type="text"
+            class="bg-gray-700 text-white border border-gray-600 rounded-lg w-full p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+            id="teacher_id"
+            name="teacher_id"
+            placeholder="Enter your teacher ID"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="block text-gray-300 mb-1 text-sm">
+            Password
+          </label>
+          <input
+            type="password"
+            class="bg-gray-700 text-white border border-gray-600 rounded-lg w-full p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <div class="mt-4 text-center">
+          <span class="text-gray-400 text-sm">
+            Already have an account?
+            <a
+              href="{% url 'teacher-login' %}"
+              class="text-blue-500 hover:text-blue-400"
+            >
+              Login here
+            </a>
+          </span>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm"
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
