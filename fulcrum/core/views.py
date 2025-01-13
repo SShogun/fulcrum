@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import *
@@ -6,24 +6,38 @@ from django.contrib.auth.hashers import *
 def Std_reg(request):
     if request.method == 'POST':
         data = request.POST
-        firstname = data.get('first_name')
-        lastname = data.get('last_name')
         email = data.get('email')
-        phone = data.get('phone')
-        password = data.get('password')
-        student_id = data.get('student_id')
-        
-        if not Student.objects.filter(email=email).exists() and not Student.objects.filter(phone=phone).exists():
+        if not Student.objects.filter(email=email).exists():
             student = Student.objects.create(
-                student_id = student_id,
-                first_name = firstname,
-                last_name = lastname,
-                email = email,
-                password = make_password(password)
+                student_id=data.get('student_id'),
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                email=data.get('email'),
+                password=make_password(data.get('password'))
             )
-            return render(request, 'studentReg.html', {'message': 'Registration successful!'})
-        else:
-            messages.error(request, 'Email or phone number already exists!')
-            return render(request, 'studentReg.html')
-    
+            messages.success(request, 'Registration successful!')
+            return redirect('student-login')
     return render(request, 'studentReg.html')
+
+def Std_login(request):
+    if request.method != 'POST':
+        return render(request, 'studentLogin.html')
+    data = request.POST
+    student_id = data.get('student_id')
+    password = data.get('password')
+
+    if Student.objects.filter(student_id=student_id).exists():
+        student = Student.objects.get(student_id=student_id)
+        if check_password(password, student.password):
+            request.session['student_id'] = student_id
+            return redirect('profile')
+        messages.error(request, 'Invalid password!')
+    else:
+        messages.error(request, 'Student ID not found!')
+    return render(request, 'studentLogin.html')
+
+def Profile(request):
+    if student_id := request.session.get('student_id'):
+        student = Student.objects.get(student_id=student_id)
+        return render(request, 'profile.html', {'student': student})
+    return redirect('student-login')
