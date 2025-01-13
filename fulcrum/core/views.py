@@ -17,11 +17,11 @@ def Std_reg(request):
             )
             messages.success(request, 'Registration successful!')
             return redirect('student-login')
-    return render(request, 'studentReg.html')
+    return render(request, 'student/studentReg.html')
 
 def Std_login(request):
     if request.method != 'POST':
-        return render(request, 'studentLogin.html')
+        return render(request, 'student/studentLogin.html')
     data = request.POST
     student_id = data.get('student_id')
     password = data.get('password')
@@ -34,18 +34,18 @@ def Std_login(request):
         messages.error(request, 'Invalid password!')
     else:
         messages.error(request, 'Student ID not found!')
-    return render(request, 'studentLogin.html')
+    return render(request, 'student/studentLogin.html')
 
 def Profile(request):
     if student_id := request.session.get('student_id'):
         student = Student.objects.get(student_id=student_id)
-        return render(request, 'profile.html', {'student': student})
+        return render(request, 'student/profile.html', {'student': student})
     return redirect('student-login')
 
 def TeacherProfile(request):
     if teacher_id := request.session.get('teacher_id'):
         teacher = Teacher.objects.get(teacher_id=teacher_id)
-        return render(request, 'teacherProfile.html', {'teacher': teacher})
+        return render(request, 'teacher/teacherProfile.html', {'teacher': teacher})
     return redirect('teacher-login')
 
 def TeacherReg(request):
@@ -57,7 +57,7 @@ def TeacherReg(request):
         )
         messages.success(request, 'Registration successful!')
         return redirect('teacher-login')
-    return render(request, 'teacherReg.html')
+    return render(request, 'teacher/teacherReg.html')
 
 def TeacherLogin(request):
     if request.method == 'POST':
@@ -80,4 +80,22 @@ def TeacherLogin(request):
         except Teacher.DoesNotExist:
             messages.error(request, 'Teacher ID not found!')
             
-    return render(request, 'teacherLogin.html')
+    return render(request, 'teacher/teacherLogin.html')
+
+def CourseList(request):
+    courses = Course.objects.all().order_by('-id')
+    return render(request, 'courses/courseList.html', {'courses': courses})
+
+def addCourse(request):
+    if request.method == 'POST':
+        data = request.POST
+        teacher_id = request.session.get('teacher_id')
+        teacher = Teacher.objects.get(teacher_id=teacher_id)
+        course = Course.objects.create(
+            name=data.get('name'),
+            description=data.get('description'),
+            faculty=teacher
+        )
+        messages.success(request, 'Course created successfully!')
+        return redirect('courses')
+    return render(request, 'courses/addCourse.html')
