@@ -3,7 +3,7 @@
   <div class="container mx-auto px-2">
     {% if messages %} {% for message in messages %}
     <div
-      class="alert alert-{{ message.tags }} bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+      class="alert alert-{{ message.tags }} text-green-500 px-4 py-3 rounded relative mb-4"
       role="alert"
     >
       <span class="block sm:inline text-white">{{ message }}</span>
@@ -52,7 +52,17 @@
             required
           />
         </div>
-
+        <div class="mt-4 text-center">
+          <span class="text-gray-400 text-sm">
+            Don't have an account?
+            <a
+              href="{% url 'teacher-reg' %}"
+              class="text-blue-500 hover:text-blue-400"
+            >
+              Register here
+            </a>
+          </span>
+        </div>
         <button
           type="submit"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm"
