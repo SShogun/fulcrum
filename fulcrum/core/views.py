@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import *
+from functools import *
 # Create your views here.
 
 def Home(request):
@@ -22,6 +23,15 @@ def Std_reg(request):
             messages.success(request, 'Registration successful!')
             return redirect('student-login')
     return render(request, 'student/studentReg.html')
+
+def teacher_login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('teacher_id'):
+            messages.error(request, 'Please login first!')
+            return redirect('teacher-login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 def Std_login(request):
     if request.method != 'POST':
@@ -46,6 +56,7 @@ def Profile(request):
         return render(request, 'student/profile.html', {'student': student})
     return redirect('student-login')
 
+@teacher_login_required
 def TeacherProfile(request):
     if teacher_id := request.session.get('teacher_id'):
         teacher = Teacher.objects.get(teacher_id=teacher_id)
@@ -90,6 +101,7 @@ def CourseList(request):
     courses = Course.objects.all().order_by('-id')
     return render(request, 'courses/courseList.html', {'courses': courses})
 
+@teacher_login_required
 def addCourse(request):
     if request.method == 'POST':
         data = request.POST
