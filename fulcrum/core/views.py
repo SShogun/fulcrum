@@ -98,8 +98,14 @@ def TeacherLogin(request):
     return render(request, 'teacher/teacherLogin.html')
 
 def CourseList(request):
-    courses = Course.objects.all().order_by('-id')
-    return render(request, 'courses/courseList.html', {'courses': courses})
+    courses = Course.objects.all()
+    context = {
+        'courses': courses,
+        'is_teacher': request.session.get('teacher_id') is not None,
+        'is_student': request.session.get('student_id') is not None
+    }
+    return render(request, 'courses/courseList.html', context)
+
 
 @teacher_login_required
 def addCourse(request):

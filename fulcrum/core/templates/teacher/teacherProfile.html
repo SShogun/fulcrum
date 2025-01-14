@@ -16,14 +16,24 @@
                 </table>
             </div>
         </div>
-        <div class="mt-8 text-center">
+        <div class="mt-8 text-center gap-2 flex items-center justify-center">
           <a
             href="{% url 'courses' %}"
             class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg no-underline transition duration-300 ease-in-out transform hover:scale-105"
           >
             View Courses
           </a>
+          <a
+          href="{% url 'addCourse' %}"
+          class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg no-underline transition duration-300 ease-in-out transform hover:scale-105"
+
+        >
+          Add Course
+        </a>
         </div>
+
+         
+
     </div>
     </div>
   </div>
