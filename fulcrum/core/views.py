@@ -3,6 +3,10 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import *
 # Create your views here.
+
+def Home(request):
+    return render(request, 'home.html')
+
 def Std_reg(request):
     if request.method == 'POST':
         data = request.POST
