@@ -3,6 +3,7 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import *
 from functools import *
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def Home(request):
@@ -56,6 +57,41 @@ def Profile(request):
         return render(request, 'student/profile.html', {'student': student})
     return redirect('student-login')
 
+def courseEnroll(request):
+    if not request.session.get('student_id'):
+        messages.error(request, 'Please login first!')
+        return redirect('student-login')
+    
+    student_id = request.session.get('student_id')
+    student = Student.objects.get(student_id=student_id)
+    courses = Course.objects.all()
+    
+    context = {
+        'student': student,
+        'courses': courses,
+    }
+    return render(request, 'courses/courseEnroll.html', context)
+
+from django.shortcuts import get_object_or_404
+
+def enroll_course(request, course_id):
+    if not request.session.get('student_id'):
+        messages.error(request, 'Please login first!')
+        return redirect('student-login')
+    
+    student_id = request.session.get('student_id')
+    student = get_object_or_404(Student, student_id=student_id)
+    course = get_object_or_404(Course, id=course_id)
+    
+    if course.enrolled.filter(student_id=student_id).exists():
+        course.enrolled.remove(student)
+        messages.success(request, f'You have successfully unenrolled from {course.name}!')
+    else:
+        course.enrolled.add(student)
+        messages.success(request, f'You have successfully enrolled in {course.name}!')
+    
+    return redirect('course-enroll')
+
 @teacher_login_required
 def TeacherProfile(request):
     if teacher_id := request.session.get('teacher_id'):
@@ -101,8 +137,6 @@ def CourseList(request):
     courses = Course.objects.all()
     context = {
         'courses': courses,
-        'is_teacher': request.session.get('teacher_id') is not None,
-        'is_student': request.session.get('student_id') is not None
     }
     return render(request, 'courses/courseList.html', context)
 

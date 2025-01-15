@@ -14,5 +14,7 @@ urlpatterns = [
     path('teacher-profile/', TeacherProfile, name='teacher-profile'),
     
     path('courses/', CourseList, name='courses'),
-    path('addCourse/', addCourse, name='addCourse'),
+    path('add-course/', addCourse, name='add-course'),
+    path('course-enroll/', courseEnroll, name='course-enroll'),
+    path('enroll-course/<int:course_id>/', enroll_course, name='enroll-course'),
 ]

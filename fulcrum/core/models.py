@@ -24,3 +24,4 @@ class Course(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(default="")
     faculty = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    enrolled = models.ManyToManyField(Student, related_name='enrolled_students')
