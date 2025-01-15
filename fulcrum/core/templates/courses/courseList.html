@@ -11,8 +11,7 @@
           </h3>
           <p class="text-gray-300 mb-4">{{ course.description }}</p>
           <p class="text-sm text-gray-400">
-            Teacher: {{ course.teacher.first_name }} {{ course.teacher.last_name
-            }}
+            Teacher: {{ course.faculty.teacher_id }}
           </p>
         </div>
         {% empty %}
